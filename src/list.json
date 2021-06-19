@@ -5,12 +5,6 @@
       "text": "Купить молока",
       "category": "Дом",
       "status": false
-    },
-    {
-      "id": 1,
-      "text": "Купить хлеба",
-      "category": "Дом",
-      "status": false
     }
   ],
   "category": [

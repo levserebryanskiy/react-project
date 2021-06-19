@@ -1,6 +1,9 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable*/
 import React from 'react';
 import axios from 'axios';
+import { ListGroup, CloseButton } from 'react-bootstrap';
+
+
 import Formcomp from './form';
 import HeadComp from './head';
 
@@ -26,9 +29,11 @@ class Listcomp extends React.Component {
         text: value,
         category,
       })
-      .then((result) => axios
-        .get('http://localhost:3001/tasks')
-        .then((response) => this.setState({ tasks: response.data })));
+      .then((result) =>
+        axios
+          .get('http://localhost:3001/tasks')
+          .then((response) => this.setState({ tasks: response.data })),
+      );
   }
 
   check(event, itemId) {
@@ -50,8 +55,11 @@ class Listcomp extends React.Component {
     this.setState({ tasks: tasks.filter((item) => item.id !== id) });
     axios
       .delete(`http://localhost:3001/tasks/${id}`)
-      .then((result) => axios.get('http://localhost:3001/tasks')
-        .then((response) => this.setState({ tasks: response.data })));
+      .then((result) =>
+        axios
+          .get('http://localhost:3001/tasks')
+          .then((response) => this.setState({ tasks: response.data })),
+      );
   }
 
   render() {
@@ -62,22 +70,20 @@ class Listcomp extends React.Component {
         <HeadComp />
         <br />
         <Formcomp press={this.press} />
-        <ul>
-          {tasks.map((task) => (
-            <li key={task.id}>
-              <span>{task.text}</span>
-              <span> - {task.category}</span>
+        <ListGroup style={{ maxWidth: '600px', margin: 'auto' }}>
+          {tasks.map((task, index) => (
+            <ListGroup.Item>
               <input
                 type="checkbox"
                 checked={task.check}
                 onChange={(event) => this.check(event, task.id)}
               />
-              <button type="button" onClick={(event) => this.delete(event, task.id)}>
-                Удалить task
-              </button>
-            </li>
+              <span>  {task.text}</span>
+              <span> - {task.category} </span>
+              <CloseButton onClick={(event) => this.delete(event, task.id)} />
+            </ListGroup.Item>
           ))}
-        </ul>
+        </ListGroup>
       </div>
     );
   }
