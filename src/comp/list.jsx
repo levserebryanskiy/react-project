@@ -1,5 +1,8 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
+import axios from 'axios';
 import Formcomp from './form';
+import HeadComp from './head';
 
 class Listcomp extends React.Component {
   constructor() {
@@ -8,18 +11,24 @@ class Listcomp extends React.Component {
     this.press = this.press.bind(this);
   }
 
-  press(event, value) {
+  componentDidMount() {
+    axios
+      .get('http://localhost:3001/tasks')
+      .then((response) => this.setState({ tasks: response.data }));
+  }
+
+  press(event, value, category) {
     event.preventDefault();
-    this.setState((state) => ({
-      tasks: [
-        ...state.tasks,
-        {
-          id: new Date(),
-          check: false,
-          text: value,
-        },
-      ],
-    }));
+    axios
+      .post('http://localhost:3001/tasks', {
+        id: new Date(),
+        check: false,
+        text: value,
+        category,
+      })
+      .then((result) => axios
+        .get('http://localhost:3001/tasks')
+        .then((response) => this.setState({ tasks: response.data })));
   }
 
   check(event, itemId) {
@@ -39,17 +48,25 @@ class Listcomp extends React.Component {
     event.preventDefault();
     const { tasks } = this.state;
     this.setState({ tasks: tasks.filter((item) => item.id !== id) });
+    axios
+      .delete(`http://localhost:3001/tasks/${id}`)
+      .then((result) => axios.get('http://localhost:3001/tasks')
+        .then((response) => this.setState({ tasks: response.data })));
   }
 
   render() {
     const { tasks } = this.state;
     return (
       <div>
+        <br />
+        <HeadComp />
+        <br />
         <Formcomp press={this.press} />
         <ul>
           {tasks.map((task) => (
             <li key={task.id}>
               <span>{task.text}</span>
+              <span> - {task.category}</span>
               <input
                 type="checkbox"
                 checked={task.check}
