@@ -16,7 +16,7 @@ class Listcomp extends React.Component {
 
   componentDidMount() {
     axios
-      .get('http://localhost:3001/tasks')
+      .get('https://levserebryanskiy-json-server.herokuapp.com/tasks')
       .then((response) => this.props.getTask(response.data));
   }
 
@@ -30,7 +30,7 @@ class Listcomp extends React.Component {
     });
 
     axios
-      .post('http://localhost:3001/tasks', {
+      .post('https://levserebryanskiy-json-server.herokuapp.com/tasks', {
         id: new Date(),
         check: false,
         text: value,
@@ -38,7 +38,7 @@ class Listcomp extends React.Component {
       })
       .then((result) =>
         axios
-          .get('http://localhost:3001/tasks')
+          .get('https://levserebryanskiy-json-server.herokuapp.com/tasks')
           .then((response) => this.props.getTask(response.data)),
       );
   }
@@ -62,10 +62,10 @@ class Listcomp extends React.Component {
     const { tasks } = this.state;
     this.setState({ tasks: tasks.filter((item) => item.id !== id) });
     axios
-      .delete(`http://localhost:3001/tasks/${id}`)
+      .delete(`https://levserebryanskiy-json-server.herokuapp.com/tasks/${id}`)
       .then((result) =>
         axios
-          .get('http://localhost:3001/tasks')
+          .get('https://levserebryanskiy-json-server.herokuapp.com/tasks')
           .then((response) => this.props.getTask(response.data)),
       );
   }

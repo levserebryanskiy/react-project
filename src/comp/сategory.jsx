@@ -22,7 +22,7 @@ class CategoryComp extends React.Component {
 
   componentDidMount() {
     axios
-      .get('http://localhost:3001/category')
+      .get('https://levserebryanskiy-json-server.herokuapp.com/category')
       .then((response) => this.props.getCategory(response.data));
   }
 
@@ -41,13 +41,13 @@ class CategoryComp extends React.Component {
       text: value,
     })
     axios
-      .post('http://localhost:3001/category', {
+      .post('https://levserebryanskiy-json-server.herokuapp.com/category', {
         id:  Date.now(),
         text: value,
       })
       .then((result) =>
         axios
-          .get('http://localhost:3001/category')
+          .get('https://levserebryanskiy-json-server.herokuapp.com/category')
           .then((response) => this.props.getCategory(response.data)),
       );
       this.close();

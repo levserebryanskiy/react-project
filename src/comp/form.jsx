@@ -12,7 +12,7 @@ class Formcomp extends React.Component {
 
   componentDidMount() {
     axios
-      .get('http://localhost:3001/category')
+      .get('https://levserebryanskiy-json-server.herokuapp.com/category')
       .then((response) => this.setState({ category: response.data }));
   }
 
