@@ -2,6 +2,7 @@
 import React from 'react';
 import axios from 'axios';
 import { Alert, Button, Table, Modal, Form, Col } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
 import HeadComp from './head';
 
@@ -22,28 +23,32 @@ class CategoryComp extends React.Component {
   componentDidMount() {
     axios
       .get('http://localhost:3001/category')
-      .then((response) => this.setState({ category: response.data }));
+      .then((response) => this.props.getCategory(response.data));
   }
 
   add(event, value) {
     event.preventDefault();
-    const { category, inputval } = this.state;
+    const { inputval } = this.state;
+    const { category } = this.props;
 
     const check = category.find((categ) => categ.text === inputval);
 
     if (check) {
       return this.setState({ alert: true });
     }
-
+    this.props.addCategory({
+      id:  Date.now(),
+      text: value,
+    })
     axios
       .post('http://localhost:3001/category', {
-        id: Math.random(),
+        id:  Date.now(),
         text: value,
       })
       .then((result) =>
         axios
           .get('http://localhost:3001/category')
-          .then((response) => this.setState({ category: response.data })),
+          .then((response) => this.props.getCategory(response.data)),
       );
       this.close();
   }
@@ -67,7 +72,8 @@ class CategoryComp extends React.Component {
   }
 
   render() {
-    const { category, inputval, modal, alert } = this.state;
+    const { inputval, modal, alert } = this.state;
+    const { category } = this.props;
 
     return (
       <div>
@@ -126,4 +132,13 @@ class CategoryComp extends React.Component {
   }
 }
 
-export default CategoryComp;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getCategory: (payload) => dispatch({ type: 'get_category', payload }),
+    addCategory: (payload) => dispatch({ type: 'add_category', payload }),
+  };
+};
+
+const mapStateToProps = (state) => ({ category: state.category });
+
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryComp);
